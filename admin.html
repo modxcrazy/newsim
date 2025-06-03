@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - SIM Requests</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #e60000;
+      margin-bottom: 20px;
+    }
+    .request-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .request-card h3 {
+      margin: 0 0 8px;
+      color: #333;
+    }
+    .request-card p {
+      margin: 4px 0;
+      color: #555;
+      font-size: 14px;
+    }
+    .actions {
+      margin-top: 12px;
+    }
+    .actions a {
+      text-decoration: none;
+      margin-right: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      display: inline-block;
+    }
+    .call-btn {
+      background: #28a745;
+    }
+    .whatsapp-btn {
+      background: #25d366;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📋 Customer Requests</h1>
+  <div id="requestList">Loading requests...</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const requestList = document.getElementById('requestList');
+
+    const loadRequests = async () => {
+      try {
+        const q = query(collection(db, "simRequests"), orderBy("timestamp", "desc"));
+        const snapshot = await getDocs(q);
+        requestList.innerHTML = '';
+
+        if (snapshot.empty) {
+          requestList.innerHTML = "<p>No requests found.</p>";
+          return;
+        }
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const phone = data.phone;
+
+          const card = document.createElement('div');
+          card.className = 'request-card';
+          card.innerHTML = `
+            <h3>${data.name}</h3>
+            <p><strong>📱 Number:</strong> ${phone}</p>
+            <p><strong>📦 Type:</strong> ${data.type}</p>
+            <p><strong>📍 Address:</strong> ${data.address}</p>
+            <div class="actions">
+              <a href="tel:${phone}" class="call-btn"><i class="fas fa-phone"></i> Call</a>
+              <a href="https://wa.me/91${phone}" target="_blank" class="whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+          `;
+          requestList.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Error loading requests:", error);
+        requestList.innerHTML = "<p>Failed to load requests.</p>";
+      }
+    };
+
+    loadRequests();
+  </script>
+
+</body>
+</html>
