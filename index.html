@@ -25,45 +25,50 @@
       justify-content: center;
     }
 
-    .container {
-      max-width: 480px;
-      background: #ffffff;
-      margin: 20px;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
+    body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    .container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 6px;
-      background: linear-gradient(90deg, var(--airtel-red) 0%, var(--airtel-blue) 100%);
+  .container {
+    width: 100%;
+    max-width: 480px;
+    min-width: 320px;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (max-width: 500px) {
+    .container {
+      padding: 30px 20px;
+      margin: 10px;
     }
 
     h2 {
-      text-align: center;
-      color: var(--airtel-red);
-      margin-bottom: 30px;
-      font-size: 28px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      font-size: 22px;
     }
 
-    h2::before, h2::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #ddd, transparent);
+    input, select, textarea {
+      font-size: 14px;
+      padding: 10px 12px;
     }
+
+    button {
+      font-size: 15px;
+      padding: 12px;
+    }
+  }
+
 
     .form-group {
       margin-bottom: 20px;
