@@ -4,99 +4,241 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Airtel SIM / Port Request</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --airtel-red: #e60000;
+      --airtel-darkred: #c10000;
+      --airtel-blue: #0033a0;
+      --airtel-light: #f8f8f8;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
       margin: 0;
       padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .container {
-      max-width: 450px;
+      max-width: 480px;
       background: #ffffff;
-      margin: 50px auto;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin: 20px;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--airtel-red) 0%, var(--airtel-blue) 100%);
     }
 
     h2 {
       text-align: center;
-      color: #e60000;
+      color: var(--airtel-red);
+      margin-bottom: 30px;
+      font-size: 28px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    h2::before, h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #ddd, transparent);
+    }
+
+    .form-group {
       margin-bottom: 20px;
+      position: relative;
     }
 
     label {
       display: block;
-      margin-top: 15px;
-      font-weight: 500;
-      color: #333;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #444;
+      font-size: 14px;
     }
 
     input, select, textarea {
       width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
       font-size: 15px;
+      transition: all 0.3s;
+      background-color: var(--airtel-light);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--airtel-red);
+      box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
     }
 
     button {
       width: 100%;
-      padding: 12px;
-      margin-top: 20px;
-      background-color: #e60000;
+      padding: 14px;
+      margin-top: 10px;
+      background-color: var(--airtel-red);
       border: none;
       color: #fff;
       font-size: 16px;
-      border-radius: 5px;
+      font-weight: 600;
+      border-radius: 8px;
       cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     button:hover {
-      background-color: #c10000;
+      background-color: var(--airtel-darkred);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(230, 0, 0, 0.2);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     #status {
-      margin-top: 15px;
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
       text-align: center;
-      font-weight: bold;
+      font-weight: 500;
+      display: none;
+    }
+
+    .success {
+      background-color: #e6f7ee;
+      color: #00a651;
+      border: 1px solid #b7ebd0;
+      display: block;
+    }
+
+    .error {
+      background-color: #fee;
+      color: #ff4d4f;
+      border: 1px solid #ffccc7;
+      display: block;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 15px;
+      top: 38px;
+      color: #999;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+      
+      h2 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>📱 Airtel New SIM / Port Request</h2>
+    <div class="logo">
+      <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.8 12H16V28H20.8C25.4667 28 28.8 24.6667 28.8 20C28.8 15.3333 25.4667 12 20.8 12Z" fill="#E60000"/>
+        <path d="M20.8 12C25.4667 12 28.8 15.3333 28.8 20C28.8 24.6667 25.4667 28 20.8 28H32V12H20.8Z" fill="#990000"/>
+        <path d="M44 12H36V28H44V24H40V20H44V16H40V12H44Z" fill="black"/>
+        <path d="M52 12H48V28H52V20H56V28H60V12H56V16H52V12Z" fill="black"/>
+        <path d="M72 12H68L64 20V12H60V28H64L68 20V28H72V12Z" fill="black"/>
+        <path d="M84 12H76V28H84V24H80V20H84V16H80V12H84Z" fill="black"/>
+        <path d="M92 12H88V28H96V24H92V12Z" fill="black"/>
+        <path d="M108 12H100V16H108V20H100V24H108V28H100V12H108Z" fill="black"/>
+      </svg>
+    </div>
+    
+    <h2><i class="fas fa-sim-card"></i> SIM/Port Request</h2>
+    
     <form id="simForm">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" required>
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" required placeholder="Enter your full name">
+        <i class="fas fa-user input-icon"></i>
+      </div>
 
-      <label for="phone">Mobile Number</label>
-      <input type="tel" id="phone" required pattern="[6-9]{1}[0-9]{9}" maxlength="10">
+      <div class="form-group">
+        <label for="phone">Mobile Number</label>
+        <input type="tel" id="phone" required pattern="[6-9]{1}[0-9]{9}" maxlength="10" placeholder="Enter 10-digit mobile number">
+        <i class="fas fa-mobile-alt input-icon"></i>
+      </div>
 
-      <label for="type">Request Type</label>
-      <select id="type" required>
-        <option value="">-- Select --</option>
-        <option value="New SIM">New SIM</option>
-        <option value="Port">Port to Airtel</option>
-      </select>
+      <div class="form-group">
+        <label for="type">Request Type</label>
+        <select id="type" required>
+          <option value="" disabled selected>Select request type</option>
+          <option value="New SIM">New SIM Card</option>
+          <option value="Port">Port to Airtel</option>
+          <option value="Replacement">SIM Replacement</option>
+        </select>
+        <i class="fas fa-caret-down input-icon"></i>
+      </div>
 
-      <label for="address">Address</label>
-      <textarea id="address" rows="3" required></textarea>
+      <div class="form-group">
+        <label for="address">Delivery Address</label>
+        <textarea id="address" required placeholder="Enter complete address for delivery"></textarea>
+      </div>
 
-      <button type="submit">Submit Request</button>
+      <button type="submit" id="submitBtn">
+        <i class="fas fa-paper-plane"></i> Submit Request
+      </button>
     </form>
-    <p id="status"></p>
+    
+    <div id="status"></div>
   </div>
 
   <script type="module">
     // Firebase SDK Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // TODO: Replace with your own Firebase config
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -113,26 +255,56 @@
     // Handle form submission
     const form = document.getElementById('simForm');
     const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submitBtn');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      // Get form values
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const type = document.getElementById('type').value;
       const address = document.getElementById('address').value.trim();
 
+      // Change button state
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      submitBtn.disabled = true;
+
       try {
+        // Add to Firestore
         await addDoc(collection(db, "simRequests"), {
-          name, phone, type, address, timestamp: new Date()
+          name, 
+          phone, 
+          type, 
+          address, 
+          status: "Pending",
+          timestamp: serverTimestamp()
         });
-        statusEl.textContent = "✅ Request submitted successfully!";
-        statusEl.style.color = "green";
+        
+        // Show success
+        statusEl.className = "success";
+        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Request submitted successfully! Our executive will contact you shortly.';
+        
+        // Reset form
         form.reset();
       } catch (err) {
         console.error("Error:", err);
-        statusEl.textContent = "❌ Failed to submit. Try again.";
-        statusEl.style.color = "red";
+        statusEl.className = "error";
+        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to submit request. Please try again or call customer care.';
+      } finally {
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+        submitBtn.disabled = false;
+        
+        // Hide status after 5 seconds
+        setTimeout(() => {
+          statusEl.style.display = 'none';
+        }, 5000);
       }
+    });
+
+    // Input validation
+    document.getElementById('phone').addEventListener('input', function(e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
     });
   </script>
 </body>
