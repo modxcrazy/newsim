@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jio SIM / Port Request</title>
+  <style>
+    :root {
+      --jio-blue: #0078d4;
+      --jio-dark: #0058a3;
+      --light-bg: #f1f5fa;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: var(--light-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      max-width: 480px;
+      width: 90%;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--jio-blue);
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--jio-blue);
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--jio-dark);
+    }
+
+    #status {
+      margin-top: 20px;
+      display: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .success {
+      background: #e7f9f1;
+      color: #088d4c;
+      border: 1px solid #b7ebd0;
+      display: block;
+    }
+
+    .error {
+      background: #fdecea;
+      color: #d93025;
+      border: 1px solid #f5c6cb;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Jio SIM / Port Request</h2>
+    <form id="jioForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Mobile Number</label>
+        <input type="tel" id="phone" pattern="[6-9]{1}[0-9]{9}" maxlength="10" required>
+      </div>
+      <div class="form-group">
+        <label for="type">Request Type</label>
+        <select id="type" required>
+          <option value="">Select Type</option>
+          <option value="New SIM">New SIM</option>
+          <option value="Port">Port to Jio</option>
+          <option value="Replacement">SIM Replacement</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" required></textarea>
+      </div>
+      <button type="submit">Submit Request</button>
+    </form>
+    <div id="status"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('jioForm');
+    const statusEl = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const type = document.getElementById('type').value;
+      const address = document.getElementById('address').value.trim();
+
+      try {
+        await addDoc(collection(db, "jioRequests"), {
+          name, phone, type, address, status: "Pending", timestamp: serverTimestamp()
+        });
+        statusEl.className = "success";
+        statusEl.innerText = "Request submitted! Jio team will contact you soon.";
+      } catch (err) {
+        statusEl.className = "error";
+        statusEl.innerText = "Error submitting request. Please try again.";
+      } finally {
+        statusEl.style.display = 'block';
+        form.reset();
+        setTimeout(() => { statusEl.style.display = 'none'; }, 5000);
+      }
+    });
+
+    document.getElementById('phone').addEventListener('input', function(e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+  </script>
+</body>
+</html>
