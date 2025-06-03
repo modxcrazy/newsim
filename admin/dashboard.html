@@ -28,8 +28,8 @@
 
     .dashboard {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
       width: 100%;
       max-width: 1000px;
     }
@@ -40,21 +40,36 @@
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.3s ease;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
+      overflow: hidden;
     }
 
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
 
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+    }
+
+    .airtel::before { background: #e60000; }
+    .jio::before { background: #0b61ff; }
+    .vi::before { background: #ff0037; }
+
     .card .logo-container {
-      height: 60px;
-      margin-bottom: 15px;
+      height: 70px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -63,58 +78,98 @@
     .card .logo {
       max-height: 100%;
       max-width: 100%;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
 
     .card h3 {
       margin: 0;
-      font-size: 22px;
+      font-size: 24px;
       color: #333;
+      font-weight: 600;
     }
 
     .card small {
       color: #666;
       display: block;
-      margin-top: 6px;
-      font-size: 14px;
+      margin-top: 8px;
+      font-size: 15px;
+      line-height: 1.4;
     }
 
     .card .stats {
-      margin-top: 15px;
-      font-size: 14px;
+      margin-top: 20px;
+      font-size: 15px;
       color: #444;
       display: flex;
-      gap: 15px;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
     }
 
     .card .stat-item {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.03);
     }
 
-    .airtel {
-      border-top: 4px solid #e60000;
-    }
-
-    .jio {
-      border-top: 4px solid #0b61ff;
-    }
-
-    .vi {
-      border-top: 4px solid #ff0037;
+    .card .stat-item i {
+      font-size: 18px;
     }
 
     .airtel .stat-item i { color: #e60000; }
     .jio .stat-item i { color: #0b61ff; }
     .vi .stat-item i { color: #ff0037; }
 
-    @media (max-width: 500px) {
+    /* Improved icons section */
+    .card .icon-bg {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .airtel .icon-bg {
+      background: rgba(230, 0, 0, 0.1);
+    }
+
+    .jio .icon-bg {
+      background: rgba(11, 97, 255, 0.1);
+    }
+
+    .vi .icon-bg {
+      background: rgba(255, 0, 55, 0.1);
+    }
+
+    .card .icon-bg i {
+      font-size: 36px;
+    }
+
+    .airtel .icon-bg i { color: #e60000; }
+    .jio .icon-bg i { color: #0b61ff; }
+    .vi .icon-bg i { color: #ff0037; }
+
+    @media (max-width: 600px) {
       h1 {
         font-size: 26px;
       }
       
       .dashboard {
         grid-template-columns: 1fr;
+      }
+      
+      .card {
+        padding: 25px;
+      }
+      
+      .card .stats {
+        flex-direction: column;
+        gap: 10px;
       }
     }
   </style>
@@ -125,6 +180,9 @@
 
   <div class="dashboard">
     <div class="card airtel" onclick="window.location.href='Airtel.html'">
+      <div class="icon-bg">
+        <i class="fas fa-sim-card"></i>
+      </div>
       <div class="logo-container">
         <svg class="logo" width="120" height="30" viewBox="0 0 120 30" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M20.8 12H16V28H20.8C25.4667 28 28.8 24.6667 28.8 20C28.8 15.3333 25.4667 12 20.8 12Z" fill="#E60000"/>
@@ -152,6 +210,9 @@
     </div>
 
     <div class="card jio" onclick="window.location.href='Jio.html'">
+      <div class="icon-bg">
+        <i class="fas fa-wifi"></i>
+      </div>
       <div class="logo-container">
         <svg class="logo" width="120" height="30" viewBox="0 0 120 30" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 12H12V28H20V24H16V20H20V16H16V12H20Z" fill="#0B61FF"/>
@@ -180,6 +241,9 @@
     </div>
 
     <div class="card vi" onclick="window.location.href='Vi.html'">
+      <div class="icon-bg">
+        <i class="fas fa-signal"></i>
+      </div>
       <div class="logo-container">
         <svg class="logo" width="120" height="30" viewBox="0 0 120 30" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 12H12V28H20V24H16V20H20V16H16V12H20Z" fill="#FF0037"/>
