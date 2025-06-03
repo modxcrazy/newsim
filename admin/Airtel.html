@@ -301,6 +301,132 @@
       color: #ccc;
     }
 
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      animation: modalFadeIn 0.3s;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: var(--airtel-blue);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .detail-label {
+      width: 150px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .detail-value {
+      flex: 1;
+    }
+
+    .status-update {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .status-form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .status-select {
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      flex: 1;
+    }
+
+    .update-btn {
+      padding: 8px 15px;
+      background: var(--airtel-red);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .update-btn:hover {
+      background: var(--airtel-darkred);
+    }
+
+    .documents-section {
+      margin-top: 20px;
+    }
+
+    .document-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .document-icon {
+      margin-right: 10px;
+      color: var(--airtel-blue);
+    }
+
+    .document-link {
+      color: var(--airtel-blue);
+      text-decoration: none;
+    }
+
+    .document-link:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 992px) {
       .stats-cards {
         grid-template-columns: repeat(2, 1fr);
@@ -314,11 +440,33 @@
       .mobile-hidden {
         display: none;
       }
+
+      .detail-row {
+        flex-direction: column;
+      }
+
+      .detail-label {
+        width: 100%;
+        margin-bottom: 5px;
+      }
     }
 
     @media (max-width: 576px) {
       .stats-cards {
         grid-template-columns: 1fr;
+      }
+
+      .status-form {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .status-select {
+        width: 100%;
+      }
+
+      .update-btn {
+        width: 100%;
       }
     }
   </style>
@@ -411,24 +559,153 @@
     </div>
   </div>
 
+  <!-- Request Details Modal -->
+  <div class="modal" id="detailsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Request Details</h3>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Details will be loaded here -->
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyD_0nX5_mfUBuO6O0wjARsyMNx_rzyp4w8",
-  authDomain: "retailerservice-dd006.firebaseapp.com",
-  projectId: "retailerservice-dd006",
-  storageBucket: "retailerservice-dd006.firebasestorage.app",
-  messagingSenderId: "1038461802919",
-  appId: "1:1038461802919:web:2493097779fa87afda7e82",
-  measurementId: "G-HTPQ9T2YHV"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_0nX5_mfUBuO6O0wjARsyMNx_rzyp4w8",
+      authDomain: "retailerservice-dd006.firebaseapp.com",
+      projectId: "retailerservice-dd006",
+      storageBucket: "retailerservice-dd006.firebasestorage.app",
+      messagingSenderId: "1038461802919",
+      appId: "1:1038461802919:web:2493097779fa87afda7e82",
+      measurementId: "G-HTPQ9T2YHV"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const requestList = document.getElementById('requestList');
+    const detailsModal = document.getElementById('detailsModal');
+    const modalBody = document.getElementById('modalBody');
+    const closeModal = document.getElementById('closeModal');
+
+    // Current selected request ID
+    let currentRequestId = null;
+
+    // Open modal with request details
+    const openRequestDetails = (requestId, requestData) => {
+      currentRequestId = requestId;
+      
+      const typeClass = requestData.type.includes('New') ? 'new' : 
+                      requestData.type.includes('Port') ? 'port' : 'replacement';
+      
+      const status = requestData.status || 'Pending';
+      
+      // Format documents if they exist
+      let documentsHtml = '';
+      if (requestData.documents && requestData.documents.length > 0) {
+        documentsHtml = `
+          <div class="documents-section">
+            <h4>Documents</h4>
+            ${requestData.documents.map(doc => `
+              <div class="document-item">
+                <i class="fas fa-file-pdf document-icon"></i>
+                <a href="${doc.url}" target="_blank" class="document-link">${doc.name || 'Document'}</a>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      modalBody.innerHTML = `
+        <div class="detail-row">
+          <div class="detail-label">Customer Name:</div>
+          <div class="detail-value">${requestData.name}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Phone Number:</div>
+          <div class="detail-value">${requestData.phone}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Email:</div>
+          <div class="detail-value">${requestData.email || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Request Type:</div>
+          <div class="detail-value request-type ${typeClass}">${requestData.type}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Address:</div>
+          <div class="detail-value">${requestData.address || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Request Date:</div>
+          <div class="detail-value">${requestData.timestamp?.toDate().toLocaleString() || 'N/A'}</div>
+        </div>
+        ${documentsHtml}
+        <div class="status-update">
+          <h4>Update Status</h4>
+          <form class="status-form" id="statusForm">
+            <select class="status-select" id="statusSelect">
+              <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="In Progress" ${status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="Completed" ${status === 'Completed' ? 'selected' : ''}>Completed</option>
+              <option value="Rejected" ${status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+            </select>
+            <button type="submit" class="update-btn">Update</button>
+          </form>
+        </div>
+      `;
+
+      // Add form submit handler
+      document.getElementById('statusForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newStatus = document.getElementById('statusSelect').value;
+        await updateRequestStatus(requestId, newStatus);
+      });
+
+      detailsModal.style.display = 'flex';
+    };
+
+    // Close modal
+    closeModal.addEventListener('click', () => {
+      detailsModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === detailsModal) {
+        detailsModal.style.display = 'none';
+      }
+    });
+
+    // Update request status in Firestore
+    const updateRequestStatus = async (requestId, newStatus) => {
+      try {
+        const requestRef = doc(db, "airtelRequests", requestId);
+        await updateDoc(requestRef, {
+          status: newStatus,
+          updatedAt: new Date()
+        });
+        
+        // Reload requests to reflect changes
+        loadRequests();
+        
+        // Close modal
+        detailsModal.style.display = 'none';
+        
+        // Show success message (you could add a toast notification here)
+        alert('Status updated successfully!');
+      } catch (error) {
+        console.error("Error updating status:", error);
+        alert('Failed to update status. Please try again.');
+      }
+    };
 
     const loadRequests = async () => {
       try {
@@ -489,7 +766,7 @@ const firebaseConfig = {
                 <button class="action-btn whatsapp-btn" title="WhatsApp" onclick="window.open('https://wa.me/91${phone}', '_blank')">
                   <i class="fab fa-whatsapp"></i>
                 </button>
-                <button class="action-btn details-btn" title="View Details">
+                <button class="action-btn details-btn" title="View Details" onclick="document.currentScript.parentNode.openRequestDetails('${doc.id}', ${JSON.stringify(data).replace(/"/g, '&quot;')})">
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
@@ -504,6 +781,9 @@ const firebaseConfig = {
         document.getElementById('completedCount').textContent = completedCount;
 
         requestList.innerHTML = html;
+        
+        // Attach openRequestDetails to window so it can be called from onclick
+        window.openRequestDetails = openRequestDetails;
       } catch (error) {
         console.error("Error loading requests:", error);
         requestList.innerHTML = `
