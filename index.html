@@ -3,314 +3,115 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Airtel SIM / Port Request</title>
+  <title>Choose Your SIM Network</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --airtel-red: #e60000;
-      --airtel-darkred: #c10000;
-      --airtel-blue: #0033a0;
-      --airtel-light: #f8f8f8;
-      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    * {
+      box-sizing: border-box;
     }
-    
+
     body {
-      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      font-family: 'Segoe UI', Roboto, sans-serif;
       margin: 0;
       padding: 0;
-      min-height: 100vh;
+      background: linear-gradient(to right, #f1f4f9, #dff1ff);
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 100vh;
     }
 
-    body {
-    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 480px;
-    min-width: 320px;
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    position: relative;
-    overflow: hidden;
-  }
-
-  @media (max-width: 500px) {
     .container {
-      padding: 30px 20px;
-      margin: 10px;
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
     }
 
     h2 {
-      font-size: 22px;
+      margin-bottom: 30px;
+      font-size: 24px;
+      color: #333;
     }
 
-    input, select, textarea {
-      font-size: 14px;
-      padding: 10px 12px;
+    .network-option {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    button {
-      font-size: 15px;
-      padding: 12px;
-    }
-  }
-
-
-    .form-group {
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #444;
-      font-size: 14px;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 15px;
-      transition: all 0.3s;
-      background-color: var(--airtel-light);
-    }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--airtel-red);
-      box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
-      background-color: #fff;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      background-color: var(--airtel-red);
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s;
+    .option-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 12px;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #fff;
+      transition: all 0.3s;
     }
 
-    button:hover {
-      background-color: var(--airtel-darkred);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(230, 0, 0, 0.2);
+    .airtel {
+      background: #e60000;
     }
 
-    button:active {
-      transform: translateY(0);
+    .jio {
+      background: #0078d4;
     }
 
-    #status {
-      margin-top: 20px;
-      padding: 12px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: 500;
-      display: none;
+    .vi {
+      background: #ff004f;
     }
 
-    .success {
-      background-color: #e6f7ee;
-      color: #00a651;
-      border: 1px solid #b7ebd0;
-      display: block;
+    .option-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
     }
 
-    .error {
-      background-color: #fee;
-      color: #ff4d4f;
-      border: 1px solid #ffccc7;
-      display: block;
-    }
-
-    .logo {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .logo img {
-      height: 40px;
-    }
-
-    .input-icon {
-      position: absolute;
-      right: 15px;
-      top: 38px;
-      color: #999;
+    .option-btn i {
+      font-size: 20px;
     }
 
     @media (max-width: 480px) {
       .container {
         padding: 30px 20px;
-        margin: 10px;
       }
-      
-      h2 {
-        font-size: 24px;
+
+      .option-btn {
+        font-size: 16px;
+        padding: 14px;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="logo">
-      <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20.8 12H16V28H20.8C25.4667 28 28.8 24.6667 28.8 20C28.8 15.3333 25.4667 12 20.8 12Z" fill="#E60000"/>
-        <path d="M20.8 12C25.4667 12 28.8 15.3333 28.8 20C28.8 24.6667 25.4667 28 20.8 28H32V12H20.8Z" fill="#990000"/>
-        <path d="M44 12H36V28H44V24H40V20H44V16H40V12H44Z" fill="black"/>
-        <path d="M52 12H48V28H52V20H56V28H60V12H56V16H52V12Z" fill="black"/>
-        <path d="M72 12H68L64 20V12H60V28H64L68 20V28H72V12Z" fill="black"/>
-        <path d="M84 12H76V28H84V24H80V20H84V16H80V12H84Z" fill="black"/>
-        <path d="M92 12H88V28H96V24H92V12Z" fill="black"/>
-        <path d="M108 12H100V16H108V20H100V24H108V28H100V12H108Z" fill="black"/>
-      </svg>
-    </div>
-    
-    <h2><i class="fas fa-sim-card"></i> SIM/Port Request</h2>
-    
-    <form id="simForm">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" required placeholder="Enter your full name">
-        <i class="fas fa-user input-icon"></i>
-      </div>
-
-      <div class="form-group">
-        <label for="phone">Mobile Number</label>
-        <input type="tel" id="phone" required pattern="[6-9]{1}[0-9]{9}" maxlength="10" placeholder="Enter 10-digit mobile number">
-        <i class="fas fa-mobile-alt input-icon"></i>
-      </div>
-
-      <div class="form-group">
-        <label for="type">Request Type</label>
-        <select id="type" required>
-          <option value="" disabled selected>Select request type</option>
-          <option value="New SIM">New SIM Card</option>
-          <option value="Port">Port to Airtel</option>
-          <option value="Replacement">SIM Replacement</option>
-        </select>
-        <i class="fas fa-caret-down input-icon"></i>
-      </div>
-
-      <div class="form-group">
-        <label for="address">Delivery Address</label>
-        <textarea id="address" required placeholder="Enter complete address for delivery"></textarea>
-      </div>
-
-      <button type="submit" id="submitBtn">
-        <i class="fas fa-paper-plane"></i> Submit Request
+    <h2><i class="fas fa-sim-card"></i> Choose Your SIM Network</h2>
+    <div class="network-option">
+      <button class="option-btn airtel" onclick="redirect('airtel.html')">
+        <i class="fab fa-battle-net"></i> Airtel
       </button>
-    </form>
-    
-    <div id="status"></div>
+      <button class="option-btn jio" onclick="redirect('jio.html')">
+        <i class="fab fa-joomla"></i> Jio
+      </button>
+      <button class="option-btn vi" onclick="redirect('vi.html')">
+        <i class="fas fa-network-wired"></i> Vi (Vodafone Idea)
+      </button>
+    </div>
   </div>
 
-  <script type="module">
-    // Firebase SDK Imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // Handle form submission
-    const form = document.getElementById('simForm');
-    const statusEl = document.getElementById('status');
-    const submitBtn = document.getElementById('submitBtn');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      // Get form values
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const type = document.getElementById('type').value;
-      const address = document.getElementById('address').value.trim();
-
-      // Change button state
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-      submitBtn.disabled = true;
-
-      try {
-        // Add to Firestore
-        await addDoc(collection(db, "simRequests"), {
-          name, 
-          phone, 
-          type, 
-          address, 
-          status: "Pending",
-          timestamp: serverTimestamp()
-        });
-        
-        // Show success
-        statusEl.className = "success";
-        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Request submitted successfully! Our executive will contact you shortly.';
-        
-        // Reset form
-        form.reset();
-      } catch (err) {
-        console.error("Error:", err);
-        statusEl.className = "error";
-        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to submit request. Please try again or call customer care.';
-      } finally {
-        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
-        submitBtn.disabled = false;
-        
-        // Hide status after 5 seconds
-        setTimeout(() => {
-          statusEl.style.display = 'none';
-        }, 5000);
-      }
-    });
-
-    // Input validation
-    document.getElementById('phone').addEventListener('input', function(e) {
-      this.value = this.value.replace(/[^0-9]/g, '');
-    });
+  <script>
+    function redirect(page) {
+      // Simulate redirect – update with your actual file paths or URLs
+      window.location.href = page;
+    }
   </script>
 </body>
 </html>
