@@ -292,21 +292,21 @@
 
     // Update counts for all providers
     async function updateAllCounts() {
-      // Airtel counts
-      const airtelCounts = await getRequestCounts("airtelRequests");
-      document.getElementById("airtel-pending").textContent = airtelCounts.pending;
-      document.getElementById("airtel-completed").textContent = airtelCounts.completed;
+  // Airtel counts
+  const airtelCounts = await getRequestCounts("airtelRequests");
+  document.getElementById("airtel-pending").textContent = `${airtelCounts.pending} Pending`;
+  document.getElementById("airtel-completed").textContent = `${airtelCounts.completed} Completed`;
 
-      // Jio counts
-      const jioCounts = await getRequestCounts("jioRequests");
-      document.getElementById("jio-pending").textContent = jioCounts.pending;
-      document.getElementById("jio-completed").textContent = jioCounts.completed;
+  // Jio counts
+  const jioCounts = await getRequestCounts("jioRequests");
+  document.getElementById("jio-pending").textContent = `${jioCounts.pending} Pending`;
+  document.getElementById("jio-completed").textContent = `${jioCounts.completed} Completed`;
 
-      // Vi counts
-      const viCounts = await getRequestCounts("viRequests");
-      document.getElementById("vi-pending").textContent = viCounts.pending;
-      document.getElementById("vi-completed").textContent = viCounts.completed;
-    }
+  // Vi counts
+  const viCounts = await getRequestCounts("viRequests");
+  document.getElementById("vi-pending").textContent = `${viCounts.pending} Pending`;
+  document.getElementById("vi-completed").textContent = `${viCounts.completed} Completed`;
+}
 
     // Load counts when page loads
     document.addEventListener("DOMContentLoaded", function() {
