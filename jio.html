@@ -4,12 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jio SIM / Port Request</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --jio-blue: #0078d4;
       --jio-dark: #0058a3;
+      --jio-light: #e6f2ff;
       --light-bg: #f1f5fa;
       --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --success: #088d4c;
+      --error: #d93025;
     }
 
     body {
@@ -19,41 +23,79 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 20px;
     }
 
     .container {
       max-width: 480px;
       width: 90%;
       background: white;
-      padding: 40px;
+      padding: 30px;
       border-radius: 16px;
       box-shadow: var(--shadow);
       position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--jio-blue), #00b0ff);
     }
 
     h2 {
       text-align: center;
       color: var(--jio-blue);
       margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
     .form-group {
       margin-bottom: 20px;
+      position: relative;
     }
 
     label {
       display: block;
       font-weight: 600;
       margin-bottom: 8px;
+      color: #333;
+      font-size: 14px;
+    }
+
+    label.required::after {
+      content: ' *';
+      color: var(--error);
     }
 
     input, select, textarea {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
       border-radius: 8px;
       font-size: 15px;
+      transition: all 0.3s;
+      background-color: #f9f9f9;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--jio-blue);
+      box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+      background-color: white;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
     }
 
     button {
@@ -66,64 +108,115 @@
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     button:hover {
       background-color: var(--jio-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 120, 212, 0.2);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     #status {
       margin-top: 20px;
-      display: none;
       padding: 12px;
       border-radius: 8px;
       font-weight: 500;
       text-align: center;
+      display: none;
     }
 
     .success {
-      background: #e7f9f1;
-      color: #088d4c;
+      background-color: #e7f9f1;
+      color: var(--success);
       border: 1px solid #b7ebd0;
       display: block;
     }
 
     .error {
-      background: #fdecea;
-      color: #d93025;
+      background-color: #fdecea;
+      color: var(--error);
       border: 1px solid #f5c6cb;
       display: block;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 15px;
+      top: 38px;
+      color: #999;
+    }
+
+    .disclaimer {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px 20px;
+      }
+      
+      h2 {
+        font-size: 20px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Jio SIM / Port Request</h2>
+    <h2><i class="fas fa-sim-card"></i> Jio SIM / Port Request</h2>
     <form id="jioForm">
       <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" required>
+        <label for="name" class="required">Full Name</label>
+        <input type="text" id="name" required placeholder="Enter your full name as per Aadhaar">
+        <i class="fas fa-user input-icon"></i>
       </div>
+      
       <div class="form-group">
-        <label for="phone">Mobile Number</label>
-        <input type="tel" id="phone" pattern="[6-9]{1}[0-9]{9}" maxlength="10" required>
+        <label for="phone" class="required">Mobile Number</label>
+        <input type="tel" id="phone" pattern="[6-9]{1}[0-9]{9}" maxlength="10" required 
+               placeholder="Enter 10-digit mobile number">
+        <i class="fas fa-mobile-alt input-icon"></i>
       </div>
+      
       <div class="form-group">
-        <label for="type">Request Type</label>
+        <label for="aadhaar" class="required">Aadhaar Number</label>
+        <input type="text" id="aadhaar" pattern="[0-9]{12}" maxlength="12" required 
+               placeholder="Enter 12-digit Aadhaar number">
+        <i class="fas fa-id-card input-icon"></i>
+        <p class="disclaimer">Your Aadhaar details will be used for KYC verification only</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="type" class="required">Request Type</label>
         <select id="type" required>
-          <option value="">New SIM/PORT To</option>
-          <option value="New SIM">New SIM Card</option>
+          <option value="" disabled selected>Select request type</option>
+          <option value="New Jio SIM">New Jio SIM Card</option>
           <option value="Port to Airtel">Port to Airtel</option>
           <option value="Port to Vi">Port to Vi</option>
         </select>
-        </select>
+        <i class="fas fa-caret-down input-icon"></i>
       </div>
+      
       <div class="form-group">
-        <label for="address">Address</label>
-        <textarea id="address" required></textarea>
+        <label for="address" class="required">Delivery Address</label>
+        <textarea id="address" required placeholder="Enter complete address for SIM delivery"></textarea>
       </div>
-      <button type="submit">Submit Request</button>
+      
+      <button type="submit" id="submitBtn">
+        <i class="fas fa-paper-plane"></i> Submit Request
+      </button>
     </form>
     <div id="status"></div>
   </div>
@@ -132,48 +225,86 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyD_0nX5_mfUBuO6O0wjARsyMNx_rzyp4w8",
-  authDomain: "retailerservice-dd006.firebaseapp.com",
-  projectId: "retailerservice-dd006",
-  storageBucket: "retailerservice-dd006.firebasestorage.app",
-  messagingSenderId: "1038461802919",
-  appId: "1:1038461802919:web:2493097779fa87afda7e82",
-  measurementId: "G-HTPQ9T2YHV"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_0nX5_mfUBuO6O0wjARsyMNx_rzyp4w8",
+      authDomain: "retailerservice-dd006.firebaseapp.com",
+      projectId: "retailerservice-dd006",
+      storageBucket: "retailerservice-dd006.appspot.com",
+      messagingSenderId: "1038461802919",
+      appId: "1:1038461802919:web:2493097779fa87afda7e82",
+      measurementId: "G-HTPQ9T2YHV"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
     const form = document.getElementById('jioForm');
     const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submitBtn');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
+      
+      // Get form values
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
+      const aadhaar = document.getElementById('aadhaar').value.trim();
       const type = document.getElementById('type').value;
       const address = document.getElementById('address').value.trim();
 
-      try {
-        await addDoc(collection(db, "jioRequests"), {
-          name, phone, type, address, status: "Pending", timestamp: serverTimestamp()
-        });
-        statusEl.className = "success";
-        statusEl.innerText = "Request submitted! Jio team will contact you soon.";
-      } catch (err) {
+      // Validate Aadhaar
+      if (!/^\d{12}$/.test(aadhaar)) {
         statusEl.className = "error";
-        statusEl.innerText = "Error submitting request. Please try again.";
-      } finally {
+        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid 12-digit Aadhaar number';
         statusEl.style.display = 'block';
+        return;
+      }
+
+      // Change button state
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      submitBtn.disabled = true;
+
+      try {
+        // Add to Firestore
+        await addDoc(collection(db, "jioRequests"), {
+          name, 
+          phone,
+          aadhaar,
+          type, 
+          address, 
+          status: "Pending",
+          timestamp: serverTimestamp()
+        });
+        
+        // Show success
+        statusEl.className = "success";
+        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Request submitted successfully! Jio executive will contact you shortly.';
+        statusEl.style.display = 'block';
+        
+        // Reset form
         form.reset();
-        setTimeout(() => { statusEl.style.display = 'none'; }, 5000);
+      } catch (err) {
+        console.error("Error:", err);
+        statusEl.className = "error";
+        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to submit request. Please try again or call Jio customer care.';
+        statusEl.style.display = 'block';
+      } finally {
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+        submitBtn.disabled = false;
+        
+        // Hide status after 5 seconds
+        setTimeout(() => {
+          statusEl.style.display = 'none';
+        }, 5000);
       }
     });
 
+    // Input validation
     document.getElementById('phone').addEventListener('input', function(e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    document.getElementById('aadhaar').addEventListener('input', function(e) {
       this.value = this.value.replace(/[^0-9]/g, '');
     });
   </script>
